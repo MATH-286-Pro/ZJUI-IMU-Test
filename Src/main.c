@@ -29,6 +29,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "bsp_delay.h"
+#include "OLED.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -99,6 +100,8 @@ int main(void)
   MX_TIM10_Init();
   /* USER CODE BEGIN 2 */
     delay_init();
+    OLED_init();
+    OLED_clear();
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in freertos.c) */

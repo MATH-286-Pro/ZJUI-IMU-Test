@@ -29,6 +29,7 @@
 
 #include "INS_task.h"
 #include "led_flow_task.h"
+#include "OLED.h"
 
 /* USER CODE END Includes */
 
@@ -51,6 +52,7 @@ osThreadId led_RGB_flow_handle;
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
+extern fp32 INS_angle[3]; // 陀螺仪角度
 
 /* USER CODE END Variables */
 osThreadId testHandle;
@@ -152,6 +154,7 @@ __weak void test_task(void const * argument)
   for(;;)
   {
     //测试任务，目前什么东西都没有
+    
     osDelay(1);
   }
   /* USER CODE END test_task */
