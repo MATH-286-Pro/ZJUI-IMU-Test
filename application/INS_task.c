@@ -203,9 +203,9 @@ void AHRS_update(fp32 quat[4], fp32 time, fp32 gyro[3], fp32 accel[3], fp32 mag[
 }
 void get_angle(fp32 q[4], fp32 *yaw, fp32 *pitch, fp32 *roll)
 {
-    *yaw = atan2f(2.0f*(q[0]*q[3]+q[1]*q[2]), 2.0f*(q[0]*q[0]+q[1]*q[1])-1.0f);
+    *yaw   = atan2f(2.0f*(q[0]*q[3]+q[1]*q[2]), 2.0f*(q[0]*q[0]+q[1]*q[1])-1.0f);
     *pitch = asinf(-2.0f*(q[1]*q[3]-q[0]*q[2]));
-    *roll = atan2f(2.0f*(q[0]*q[1]+q[2]*q[3]),2.0f*(q[0]*q[0]+q[3]*q[3])-1.0f);
+    *roll  = atan2f(2.0f*(q[0]*q[1]+q[2]*q[3]),2.0f*(q[0]*q[0]+q[3]*q[3])-1.0f);
 }
 
 /**
@@ -254,7 +254,8 @@ static void imu_temp_control(fp32 temp)
 
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
-{
+{   
+    // 加速计
     if(GPIO_Pin == INT1_ACCEL_Pin)
     {
         accel_update_flag |= 1 << IMU_DR_SHFITS;
@@ -264,6 +265,8 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
             imu_cmd_spi_dma();
         }
     }
+
+    // 陀螺仪
     else if(GPIO_Pin == INT1_GYRO_Pin)
     {
         gyro_update_flag |= 1 << IMU_DR_SHFITS;
@@ -272,6 +275,8 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
             imu_cmd_spi_dma();
         }
     }
+
+    // 磁力计
     else if(GPIO_Pin == DRDY_IST8310_Pin)
     {
         mag_update_flag |= 1 << IMU_DR_SHFITS;

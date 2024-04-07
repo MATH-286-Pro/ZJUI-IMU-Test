@@ -42,7 +42,8 @@ osThreadId led_RGB_flow_handle;
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+#define PI 3.1415926f
+#define DRG 180/PI
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -53,6 +54,7 @@ osThreadId led_RGB_flow_handle;
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
 extern fp32 INS_angle[3]; // 陀螺仪角度
+extern fp32 temp;         // BMI088温度
 
 /* USER CODE END Variables */
 osThreadId testHandle;
@@ -178,16 +180,16 @@ __weak void test_task(void const * argument)
 void OLED_task(void const * argument)
 {
   /* USER CODE BEGIN OLED_task */
-  OLED_show_string(0,0,"angle1 = ");
-  OLED_show_string(1,0,"angle2 = ");
-  OLED_show_string(2,0,"angle3 = ");
+  OLED_show_string(0,0,"Yaw   = ");
+  OLED_show_string(1,0,"Pitch = ");
+  OLED_show_string(2,0,"Roll  = ");
   OLED_refresh_gram();
   /* Infinite loop */
   for(;;)
   {
-    OLED_show_signednum(0,9,INS_angle[0]*1000,5);
-    OLED_show_signednum(1,9,INS_angle[1]*1000,5);
-    OLED_show_signednum(2,9,INS_angle[2]*1000,5);
+    OLED_show_signednum(0,9,INS_angle[0]*DRG,5);
+    OLED_show_signednum(1,9,INS_angle[1]*DRG,5);
+    OLED_show_signednum(2,9,INS_angle[2]*DRG,5);
     OLED_refresh_gram();
     osDelay(1);
   }
