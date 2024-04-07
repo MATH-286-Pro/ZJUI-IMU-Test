@@ -31,6 +31,7 @@
 #include "bsp_delay.h"
 #include "OLED.h"
 #include "OLED_BMP.h"
+#include "buzzer.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -100,12 +101,15 @@ int main(void)
   MX_I2C3_Init();
   MX_TIM10_Init();
   MX_I2C2_Init();
+  MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
     delay_init();
     OLED_init();
     OLED_clear();
     OLED_showBMP_gram(BMP_GENSHIN_GRAM);
     OLED_refresh_gram();
+
+    Buzzer_start();
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in freertos.c) */

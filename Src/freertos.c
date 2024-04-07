@@ -151,11 +151,16 @@ void MX_FREERTOS_Init(void) {
 __weak void test_task(void const * argument)
 {
   /* USER CODE BEGIN test_task */
+  OLED_show_string(0,0,"INS_angle1 = ");
+  OLED_show_string(1,0,"INS_angle2 = ");
+  OLED_show_string(2,0,"INS_angle3 = ");
   /* Infinite loop */
   for(;;)
   {
     //测试任务，目前什么东西都没有
-    
+    OLED_show_signednum(0,13,INS_angle[0],5);
+    OLED_show_signednum(1,13,INS_angle[1],5);
+    OLED_show_signednum(2,13,INS_angle[2],5);
     osDelay(1);
   }
   /* USER CODE END test_task */
