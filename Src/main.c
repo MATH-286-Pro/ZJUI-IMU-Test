@@ -108,6 +108,8 @@ int main(void)
     OLED_clear();
     OLED_showBMP_gram(BMP_GENSHIN_GRAM);
     OLED_refresh_gram();
+    HAL_Delay(500);
+    OLED_showBMP_gram(BMP_BLANK_GRAM);
 
     Buzzer_start();
   /* USER CODE END 2 */

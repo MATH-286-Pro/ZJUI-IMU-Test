@@ -56,6 +56,7 @@ extern fp32 INS_angle[3]; // 陀螺仪角度
 
 /* USER CODE END Variables */
 osThreadId testHandle;
+osThreadId OLEDHandle;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -63,6 +64,7 @@ osThreadId testHandle;
 /* USER CODE END FunctionPrototypes */
 
 void test_task(void const * argument);
+void OLED_task(void const * argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -129,6 +131,10 @@ void MX_FREERTOS_Init(void) {
   osThreadDef(test, test_task, osPriorityNormal, 0, 128);
   testHandle = osThreadCreate(osThread(test), NULL);
 
+  /* definition and creation of OLED */
+  osThreadDef(OLED, OLED_task, osPriorityIdle, 0, 128);
+  OLEDHandle = osThreadCreate(osThread(OLED), NULL);
+
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   // 这里是官方手写的 FreeRTOS 线程，.ioc不显示这些任务
@@ -151,19 +157,41 @@ void MX_FREERTOS_Init(void) {
 __weak void test_task(void const * argument)
 {
   /* USER CODE BEGIN test_task */
-  OLED_show_string(0,0,"INS_angle1 = ");
-  OLED_show_string(1,0,"INS_angle2 = ");
-  OLED_show_string(2,0,"INS_angle3 = ");
+
   /* Infinite loop */
   for(;;)
   {
-    //测试任务，目前什么东西都没有
-    OLED_show_signednum(0,13,INS_angle[0],5);
-    OLED_show_signednum(1,13,INS_angle[1],5);
-    OLED_show_signednum(2,13,INS_angle[2],5);
+    // 测试任务，目前什么东西都没有
+    // 官方写了一个test_task，这里的weak void不会进入
     osDelay(1);
   }
   /* USER CODE END test_task */
+}
+
+/* USER CODE BEGIN Header_OLED_task */
+/**
+* @brief Function implementing the OLED thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_OLED_task */
+void OLED_task(void const * argument)
+{
+  /* USER CODE BEGIN OLED_task */
+  OLED_show_string(0,0,"angle1 = ");
+  OLED_show_string(1,0,"angle2 = ");
+  OLED_show_string(2,0,"angle3 = ");
+  OLED_refresh_gram();
+  /* Infinite loop */
+  for(;;)
+  {
+    OLED_show_signednum(0,9,INS_angle[0]*1000,5);
+    OLED_show_signednum(1,9,INS_angle[1]*1000,5);
+    OLED_show_signednum(2,9,INS_angle[2]*1000,5);
+    OLED_refresh_gram();
+    osDelay(1);
+  }
+  /* USER CODE END OLED_task */
 }
 
 /* Private application code --------------------------------------------------*/
