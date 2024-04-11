@@ -29,6 +29,19 @@
 
 #include "INS_task.h"
 #include "OLED.h"
+#include "can_test.h"
+#include "remote_control.h"
+#include "bsp_usart.h"
+#include "bsp_rc.h"
+#include "can.h"
+#include "tim.h"
+#include "usart.h"
+#include "gpio.h"
+#include "i2c.h"
+#include "MI_motor_drive.h"
+#include "unitreeA1_cmd.h"
+#include <string.h>
+#include "joint.h"
 
 /* USER CODE END Includes */
 
@@ -58,6 +71,8 @@ extern fp32 temp;         // BMI088温度
 /* USER CODE END Variables */
 osThreadId testHandle;
 osThreadId OLEDHandle;
+osThreadId Motor_MIHandle;
+osThreadId Motor_A1Handle;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -66,6 +81,8 @@ osThreadId OLEDHandle;
 
 void test_task(void const * argument);
 void OLED_task(void const * argument);
+void Motor_MI_task(void const * argument);
+void Motor_A1_task(void const * argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -136,6 +153,14 @@ void MX_FREERTOS_Init(void) {
   osThreadDef(OLED, OLED_task, osPriorityIdle, 0, 128);
   OLEDHandle = osThreadCreate(osThread(OLED), NULL);
 
+  /* definition and creation of Motor_MI */
+  osThreadDef(Motor_MI, Motor_MI_task, osPriorityIdle, 0, 128);
+  Motor_MIHandle = osThreadCreate(osThread(Motor_MI), NULL);
+
+  /* definition and creation of Motor_A1 */
+  osThreadDef(Motor_A1, Motor_A1_task, osPriorityIdle, 0, 128);
+  Motor_A1Handle = osThreadCreate(osThread(Motor_A1), NULL);
+
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   // 这里是官方手写的 FreeRTOS 线程，.ioc不显示这些任务
@@ -191,6 +216,42 @@ void OLED_task(void const * argument)
     osDelay(1);
   }
   /* USER CODE END OLED_task */
+}
+
+/* USER CODE BEGIN Header_Motor_MI_task */
+/**
+* @brief Function implementing the Motor_MI thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_Motor_MI_task */
+void Motor_MI_task(void const * argument)
+{
+  /* USER CODE BEGIN Motor_MI_task */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END Motor_MI_task */
+}
+
+/* USER CODE BEGIN Header_Motor_A1_task */
+/**
+* @brief Function implementing the Motor_A1 thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_Motor_A1_task */
+void Motor_A1_task(void const * argument)
+{
+  /* USER CODE BEGIN Motor_A1_task */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END Motor_A1_task */
 }
 
 /* Private application code --------------------------------------------------*/
