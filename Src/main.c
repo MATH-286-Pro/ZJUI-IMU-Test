@@ -111,7 +111,7 @@ int main(void)
     HAL_Delay(500);
     OLED_showBMP_gram(BMP_BLANK_GRAM);
 
-    Buzzer_start();
+    // Buzzer_start(); // 蜂鸣器
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in freertos.c) */

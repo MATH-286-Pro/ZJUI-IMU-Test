@@ -28,7 +28,6 @@
 /* USER CODE BEGIN Includes */
 
 #include "INS_task.h"
-#include "led_flow_task.h"
 #include "OLED.h"
 
 /* USER CODE END Includes */
@@ -143,8 +142,6 @@ void MX_FREERTOS_Init(void) {
     osThreadDef(imuTask, INS_task, osPriorityRealtime, 0, 1024);
     imuTaskHandle = osThreadCreate(osThread(imuTask), NULL);
 
-    osThreadDef(led, led_RGB_flow_task, osPriorityNormal, 0, 256);
-    led_RGB_flow_handle = osThreadCreate(osThread(led), NULL);
   /* USER CODE END RTOS_THREADS */
 
 }

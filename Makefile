@@ -37,19 +37,17 @@ BUILD_DIR = build
 # C sources
 C_SOURCES =  \
 application/INS_task.c \
-application/led_flow_task.c \
-application/test_task.c \
 bsp/boards/bsp_delay.c \
 bsp/boards/bsp_imu_pwm.c \
-bsp/boards/bsp_led.c \
 bsp/boards/bsp_spi.c \
-components/algorithm/MahonyAHRS.c \
-components/algorithm/user_lib.c \
-components/controller/pid.c \
-components/devices/BMI088driver.c \
-components/devices/BMI088Middleware.c \
-components/devices/ist8310driver_middleware.c \
-components/devices/ist8310driver.c \
+modules/Algorithm/MahonyAHRS.c \
+modules/Algorithm/pid.c \
+modules/BMI088/BMI088driver.c \
+modules/BMI088/BMI088Middleware.c \
+modules/IST8310/IST8310driver_middleware.c \
+modules/IST8310/IST8310driver.c \
+modules/OLED/OLED.c \
+modules/Buzzer/buzzer.c \
 Src/main.c \
 Src/gpio.c \
 Src/freertos.c \
@@ -87,9 +85,8 @@ Middlewares/Third_Party/FreeRTOS/Source/tasks.c \
 Middlewares/Third_Party/FreeRTOS/Source/timers.c \
 Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.c \
 Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.c \
-Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.c \
-modules/OLED/OLED.c \
-modules/Buzzer/buzzer.c
+Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.c 
+
 
 
 ##################################
@@ -156,7 +153,6 @@ C_INCLUDES =  \
 -Iapplication \
 -Icomponents/algorithm \
 -Icomponents/controller \
--Icomponents/devices \
 -Ibsp/boards \
 -IInc \
 -IHardware/Inc \
@@ -168,8 +164,12 @@ C_INCLUDES =  \
 -IMiddlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F \
 -IDrivers/CMSIS/Device/ST/STM32F4xx/Include \
 -IDrivers/CMSIS/Include \
+-Imodules \
+-Imodules/Algorithm \
 -Imodules/OLED \
--Imodules/Buzzer 
+-Imodules/Buzzer \
+-Imodules/BMI088 \
+-Imodules/IST8310 
 
 
 # compile gcc flags
