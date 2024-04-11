@@ -109,15 +109,16 @@ int main(void)
   MX_USART3_UART_Init();
   MX_CAN1_Init();
   /* USER CODE BEGIN 2 */
-    delay_init();
-    OLED_init();
-    OLED_clear();
-    OLED_showBMP_gram(BMP_GENSHIN_GRAM);
-    OLED_refresh_gram();
-    HAL_Delay(500);
-    OLED_showBMP_gram(BMP_BLANK_GRAM);
-
+    // 自定义初始化
+    // delay_init();
+    // OLED_init();
+    // OLED_clear();
+    // OLED_showBMP_gram(BMP_GENSHIN_GRAM);
+    // OLED_refresh_gram();
+    // HAL_Delay(500);
+    // OLED_showBMP_gram(BMP_BLANK_GRAM);
     // Buzzer_start(); // 蜂鸣器
+
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in freertos.c) */

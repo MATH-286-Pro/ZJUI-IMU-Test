@@ -54,12 +54,41 @@ osThreadId led_RGB_flow_handle;
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define PI 3.1415926f
-#define DRG 180/PI
+#define PI 3.1415926535f
+#define RAD PI/180
+#define DGR 180/PI
+
+#define UP 1
+#define MID 3
+#define DOWN 2
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
+
+//定义全局变量
+uint8_t STOP;  //急停按键
+uint8_t STATE; //状态按键 (A1电机)
+const RC_ctrl_t* DT7_pram; //遥控器控制结构体
+
+extern fp32 INS_angle[3]; // INS 陀螺仪角度
+
+MI_Motor_s MI_Motor_ID1;              // 定义小米电机结构体1
+MI_Motor_s MI_Motor_ID2;              // 定义小米电机结构体2
+
+extern motor_send_t cmd_left;         // 左腿一号电机数据体
+extern motor_send_t cmd_right;        // 右腿一号电机数据体
+
+extern motor_recv_t Date_left;        // 左腿电机接收数据体
+extern motor_recv_t id00_left_date;   // 左腿00号电机接收数据体
+extern motor_recv_t id01_left_date;   // 左腿01号电机接收数据体
+extern motor_recv_t id02_left_date;   // 左腿02号电机接收数据体
+
+// 默认电机零位
+extern float zero_left_ID0;
+extern float zero_left_ID1;
+extern float zero_right_ID0;
+extern float zero_right_ID1;
 
 /* USER CODE END PM */
 
@@ -125,7 +154,22 @@ void vApplicationGetTimerTaskMemory( StaticTask_t **ppxTimerTaskTCBBuffer, Stack
   */
 void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN Init */
-       
+  //自定义 初始化 开始 ----------------------------------------------------------------
+  // HAL_Delay(1000);       // 延时1s 防止电机没上电先初始化现象 (待测试)
+  OLED_init();           // OLED初始化
+
+  int i = 0;
+
+  OLED_clear();          OLED_printf(i/20,i%20,"#");  OLED_refresh_gram(); i++; // OLED清屏
+  remote_control_init(); OLED_printf(i/20,i%20,"#");  OLED_refresh_gram(); i++; // 遥控器初始化
+  // CAN_Init(&hcan1);      OLED_printf(i/20,i%20,"#");  OLED_refresh_gram(); i++; // 初始化CAN1 + 打开中断FIFO0 FIFO1
+  // CAN_Filter_Mask_Config(&hcan1, CAN_FILTER(0) | CAN_FIFO_0 | CAN_EXTID | CAN_DATA_TYPE, 0, 0); // 配置CAN1过滤器
+  
+  Buzzer_start(); // 蜂鸣器叫一声
+
+  OLED_clear();
+
+  //自定义 初始化 结束 ----------------------------------------------------------------
   /* USER CODE END Init */
 
   /* USER CODE BEGIN RTOS_MUTEX */
@@ -202,18 +246,22 @@ __weak void test_task(void const * argument)
 void OLED_task(void const * argument)
 {
   /* USER CODE BEGIN OLED_task */
-  OLED_show_string(0,0,"Yaw   = ");
-  OLED_show_string(1,0,"Pitch = ");
-  OLED_show_string(2,0,"Roll  = ");
-  OLED_refresh_gram();
+  uint8_t i = 0;
+  OLED_show_string(i,0," Yaw =");  i++;
+  OLED_show_string(i,0,"Pitch=");  i++;
   /* Infinite loop */
   for(;;)
-  {
-    OLED_show_signednum(0,9,INS_angle[0]*DRG,5);
-    OLED_show_signednum(1,9,INS_angle[1]*DRG,5);
-    OLED_show_signednum(2,9,INS_angle[2]*DRG,5);
+  { 
+    // 任务 OLED + 遥控器接收
+    // DT7_pram = get_remote_control_point(); // 获取遥控器控制结构体
+    // STOP  = DT7_pram->rc.s[1]/2; // 跟踪遥控器开关 S[1]左 S[0]右 状态  // 上1 中3 下2
+    // STATE = DT7_pram->rc.s[0];   // 跟踪遥控器开关 S[1]左 S[0]右 状态  // 上1 中3 下2
+
+    uint8_t i = 0;
+    OLED_show_signednum(i,7,INS_angle[0]*DGR,2); i++;
+    OLED_show_signednum(i,7,INS_angle[1]*DGR,2); i++;
     OLED_refresh_gram();
-    osDelay(1);
+    osDelay(5);
   }
   /* USER CODE END OLED_task */
 }
@@ -228,9 +276,21 @@ void OLED_task(void const * argument)
 void Motor_MI_task(void const * argument)
 {
   /* USER CODE BEGIN Motor_MI_task */
+  MI_motor_Init(&MI_Motor_ID1,&MI_CAN_1,1); // 将MI_CAN_1，ID=1传入小米结构体 
+  MI_motor_Init(&MI_Motor_ID2,&MI_CAN_1,2); // 将MI_CAN_1，ID=2传入小米结构体 
+  MI_motor_Enable(&MI_Motor_ID1);           // 通过发送小米结构体 data=00000000 电机使能
+  MI_motor_Enable(&MI_Motor_ID2);           // 通过发送小米结构体 data=00000000 电机使能
   /* Infinite loop */
   for(;;)
   {
+    // 小米电机控制
+    MI_motor_SpeedControl(&MI_Motor_ID1,(float) STOP*DT7_pram->rc.ch[1]/33,1); // 使用 (float) 强制转换
+    MI_motor_SpeedControl(&MI_Motor_ID2,(float) STOP*DT7_pram->rc.ch[3]/-33,1);
+
+    // 小米电机模式
+    // 力矩模式 MI_motor_TorqueControl()
+    // 位置模式 MI_motor_LocationControl()
+    // 速度模式 MI_motor_SpeedControl()
     osDelay(1);
   }
   /* USER CODE END Motor_MI_task */

@@ -37,9 +37,12 @@ BUILD_DIR = build
 # C sources
 C_SOURCES =  \
 application/INS_task.c \
+application/joint.c \
 bsp/boards/bsp_delay.c \
 bsp/boards/bsp_imu_pwm.c \
 bsp/boards/bsp_spi.c \
+bsp/boards/bsp_rc.c \
+bsp/boards/bsp_usart.c \
 modules/Algorithm/MahonyAHRS.c \
 modules/Algorithm/pid.c \
 modules/BMI088/BMI088driver.c \
