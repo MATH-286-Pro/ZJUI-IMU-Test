@@ -26,21 +26,16 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include <string.h>
 #include "INS_task.h"
 #include "OLED.h"
-#include "can_test.h"
-#include "remote_control.h"
-#include "bsp_usart.h"
-#include "bsp_rc.h"
+// #include "remote_control.h"
+// #include "bsp_usart.h"
+// #include "bsp_rc.h"
 #include "can.h"
-#include "tim.h"
-#include "usart.h"
-#include "gpio.h"
-#include "i2c.h"
+#include "can_test.h"
 #include "MI_motor_drive.h"
 #include "unitreeA1_cmd.h"
-#include <string.h>
 #include "joint.h"
 
 /* USER CODE END Includes */
