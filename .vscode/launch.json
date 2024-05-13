@@ -1,0 +1,39 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "showDevDebugOutput": "parsed",
+      "cwd": "${workspaceRoot}",
+      "executable": "./build/ins_task.elf",
+      "name": "Debug STM32",
+      "request": "launch",
+      "preLaunchTask": "buildEmbeddedTargets",
+      "type": "cortex-debug",
+      "servertype": "openocd",
+      "device": "stm32f407",
+      "configFiles": [
+        "interface/stlink-v2.cfg",
+        "target/stm32f4x.cfg"
+      ]
+    },
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "cppdbg",
+      "request": "launch",
+      "args": [],
+      "stopAtEntry": false,
+      "externalConsole": true,
+      "cwd": "d:/DeskTop/Embedded/Infantry_test/Code_DJI_INS/Src",
+      "program": "d:/DeskTop/Embedded/Infantry_test/Code_DJI_INS/Src/build/Debug/outDebug",
+      "MIMode": "gdb",
+      "miDebuggerPath": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
+    }
+  ]
+}
